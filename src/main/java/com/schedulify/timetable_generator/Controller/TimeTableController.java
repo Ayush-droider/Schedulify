@@ -30,6 +30,8 @@ public class TimeTableController {
     public List<TimeTableEntryResponse> generateTimeTable()
             throws ExecutionException, InterruptedException {
 
+        System.out.println("Generate API Hit");
+
         TimeTable solved = timeTableSolverService.solve();
 
         return solved.getTimeTableEntries()
