@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios"; // <-- Use your shared axios instance
 import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -18,13 +18,10 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const response = await axios.post(
-        "http://localhost:8080/auth/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await api.post("/auth/login", {
+        username,
+        password,
+      });
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
@@ -32,7 +29,12 @@ export default function Login() {
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
-      alert("Login failed");
+
+      if (error.response) {
+        alert(error.response.data.message || "Login failed");
+      } else {
+        alert("Unable to connect to the server.");
+      }
     } finally {
       setLoading(false);
     }
@@ -41,7 +43,6 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
-        {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="bg-white/20 p-4 rounded-full">
             <CalendarDays size={40} />
@@ -68,6 +69,7 @@ export default function Login() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter username"
               className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
+              required
             />
           </div>
 
@@ -83,6 +85,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
+                required
               />
 
               <button

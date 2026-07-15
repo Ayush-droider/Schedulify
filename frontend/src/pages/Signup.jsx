@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -18,7 +18,7 @@ export default function Signup() {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:8080/auth/register", {
+      await api.post("/auth/register", {
         username,
         password,
       });
@@ -29,10 +29,10 @@ export default function Signup() {
     } catch (error) {
       console.error(error);
 
-      if (error.response?.data?.message) {
-        alert(error.response.data.message);
+      if (error.response) {
+        alert(error.response.data.message || "Registration failed");
       } else {
-        alert("Registration failed");
+        alert("Unable to connect to the server.");
       }
     } finally {
       setLoading(false);
@@ -42,7 +42,6 @@ export default function Signup() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
-        {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="bg-white/20 p-4 rounded-full">
             <CalendarDays size={40} />
