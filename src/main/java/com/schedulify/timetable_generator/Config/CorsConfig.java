@@ -17,8 +17,9 @@ public class CorsConfig {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:5173",
-                                "https://YOUR_PROJECT_NAME.vercel.app"
+                                "https://schedulify-phi.vercel.app"
                         )
+                        .allowCredentials(true)
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
