@@ -27,17 +27,25 @@ public class TimeTableController {
     // ADMIN ONLY
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/generate")
-    public List<TimeTableEntryResponse> generateTimeTable()
-            throws ExecutionException, InterruptedException {
+    public List<TimeTableEntryResponse> generateTimeTable() {
 
-        System.out.println("Generate API Hit");
+        try {
 
-        TimeTable solved = timeTableSolverService.solve();
+            System.out.println("Generate API Hit");
 
-        return solved.getTimeTableEntries()
-                .stream()
-                .map(mapper::mapToResponse)
-                .toList();
+            TimeTable solved = timeTableSolverService.solve();
+
+            return solved.getTimeTableEntries()
+                    .stream()
+                    .map(mapper::mapToResponse)
+                    .toList();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();      // VERY IMPORTANT
+
+            throw new RuntimeException(e);
+        }
     }
 
     // ADMIN ONLY (debug APIs should never be public)
