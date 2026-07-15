@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../api/axios";
+import axios from "axios";
 import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -18,10 +18,13 @@ export default function Signup() {
     try {
       setLoading(true);
 
-      await api.post("/auth/register", {
-        username,
-        password,
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/register`,
+        {
+          username,
+          password,
+        }
+      );
 
       alert("Account created successfully!");
 

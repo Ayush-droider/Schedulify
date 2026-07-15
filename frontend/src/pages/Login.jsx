@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../api/axios"; // <-- Use your shared axios instance
+import axios from "axios";
 import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -18,10 +18,13 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const response = await api.post("/auth/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/login`,
+        {
+          username,
+          password,
+        }
+      );
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
