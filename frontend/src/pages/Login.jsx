@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,15 +26,8 @@ export default function Login() {
         }
       );
 
-      localStorage.setItem(
-        "token",
-        response.data.token
-      );
-
-      localStorage.setItem(
-        "role",
-        response.data.role
-      );
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("role", response.data.role);
 
       navigate("/dashboard");
     } catch (error) {
@@ -47,9 +40,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 flex items-center justify-center p-4">
-
       <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
-
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="bg-white/20 p-4 rounded-full">
@@ -66,7 +57,6 @@ export default function Login() {
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
-
           <div>
             <label className="block mb-2 text-sm">
               Username
@@ -75,9 +65,7 @@ export default function Login() {
             <input
               type="text"
               value={username}
-              onChange={(e) =>
-                setUsername(e.target.value)
-              }
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Enter username"
               className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
             />
@@ -90,26 +78,16 @@ export default function Login() {
 
             <div className="relative">
               <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
+                type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
                 className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
               />
 
               <button
                 type="button"
-                onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-3"
               >
                 {showPassword ? (
@@ -128,10 +106,7 @@ export default function Login() {
           >
             {loading ? (
               <>
-                <Loader2
-                  className="animate-spin"
-                  size={20}
-                />
+                <Loader2 className="animate-spin" size={20} />
                 Logging in...
               </>
             ) : (
@@ -140,10 +115,19 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-8 text-center text-sm text-gray-300">
-          © 2026 Schedulify • Timetable Scheduling
+        <div className="mt-6 text-center text-sm text-gray-300">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="text-indigo-300 hover:text-white font-semibold transition"
+          >
+            Sign Up
+          </Link>
         </div>
 
+        <div className="mt-8 text-center text-sm text-gray-300">
+          Built by <span className="font-semibold">Ayush Pandey</span>
+        </div>
       </div>
     </div>
   );

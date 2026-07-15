@@ -1,0 +1,137 @@
+import { useState } from "react";
+import axios from "axios";
+import { Eye, EyeOff, CalendarDays, Loader2 } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+
+export default function Signup() {
+  const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      await axios.post("http://localhost:8080/auth/register", {
+        username,
+        password,
+      });
+
+      alert("Account created successfully!");
+
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Registration failed");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="bg-white/20 p-4 rounded-full">
+            <CalendarDays size={40} />
+          </div>
+
+          <h1 className="text-4xl font-bold mt-4">
+            Schedulify
+          </h1>
+
+          <p className="text-gray-200 mt-2 text-center">
+            Create your account
+          </p>
+        </div>
+
+        <form onSubmit={handleSignup} className="space-y-5">
+          <div>
+            <label className="block mb-2 text-sm">
+              Username
+            </label>
+
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Choose a username"
+              required
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm">
+              Password
+            </label>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Create a password"
+                required
+                className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-300"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-3"
+              >
+                {showPassword ? (
+                  <EyeOff size={20} />
+                ) : (
+                  <Eye size={20} />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 font-semibold flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={20} />
+                Creating account...
+              </>
+            ) : (
+              "Create Account"
+            )}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-gray-300">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-indigo-300 hover:text-white font-semibold"
+          >
+            Login
+          </Link>
+        </div>
+
+        <div className="mt-8 text-center text-sm text-gray-300">
+          Built by <span className="font-semibold">Ayush Pandey</span>
+        </div>
+      </div>
+    </div>
+  );
+}

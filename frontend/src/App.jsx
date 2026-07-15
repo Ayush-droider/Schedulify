@@ -14,6 +14,7 @@ import GenerateTimetable from "./pages/GenerateTimetable";
 import Runs from "./pages/Runs";
 import TimetableView from "./pages/TimetableView";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -22,8 +23,9 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Public Route */}
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* Protected Routes */}
         <Route
