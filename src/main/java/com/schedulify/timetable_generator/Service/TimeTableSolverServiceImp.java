@@ -36,7 +36,9 @@ public class TimeTableSolverServiceImp implements TimeTableSolverService {
     @Override
     public TimeTable solve() throws ExecutionException, InterruptedException {
         TimeTable problem = timeTableDataBuilder.dataBuilder();
-        SolverJob<TimeTable> job = solverManager.solve(1L, problem);
+        Long problemId = System.nanoTime();
+        SolverJob<TimeTable> job =
+                solverManager.solve(problemId, problem);
         TimeTable solved = job.getFinalBestSolution();
 
         TimeTableRun run= TimeTableRun
