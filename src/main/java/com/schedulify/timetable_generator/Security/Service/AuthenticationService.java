@@ -29,7 +29,7 @@ public class AuthenticationService {
                 .password(
                         passwordEncoder.encode(
                                 request.getPassword()))
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_STUDENT)
                 .build();
 
         userRepo.save(user);

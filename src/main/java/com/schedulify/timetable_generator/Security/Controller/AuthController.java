@@ -21,6 +21,8 @@ public class AuthController {
     public AuthenticationResponse register(
             @RequestBody RegisterRequest request) {
 
+        System.out.println("REGISTER ENDPOINT HIT");
+
         return service.register(request);
     }
 
