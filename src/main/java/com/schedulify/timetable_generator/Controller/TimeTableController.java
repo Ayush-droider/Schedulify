@@ -10,6 +10,8 @@ import com.schedulify.timetable_generator.Mapper.TimeTableEntryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,15 +26,12 @@ public class TimeTableController {
     private final TimeTableEntryMapper mapper;
     private final TimeTableDataBuilder timeTableDataBuilder;
 
-    // ADMIN ONLY
+    // ================= ADMIN =================
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/generate")
     public List<TimeTableEntryResponse> generateTimeTable() {
-
         try {
-
-            System.out.println("Generate API Hit");
-
             TimeTable solved = timeTableSolverService.solve();
 
             return solved.getTimeTableEntries()
@@ -41,30 +40,32 @@ public class TimeTableController {
                     .toList();
 
         } catch (Exception e) {
-
-            e.printStackTrace();      // VERY IMPORTANT
-
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    // ADMIN ONLY (debug APIs should never be public)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/debug")
     public TimeTable debug() {
-        System.out.println("Working");
         return timeTableDataBuilder.dataBuilder();
     }
 
-    // USER + ADMIN
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    // ================= ADMIN + TEACHER + STUDENT =================
+
     @GetMapping("/runs")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     public List<TimeTableRunResponse> getAllTimeTableRuns() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("Username : " + auth.getName());
+        System.out.println("Authorities : " + auth.getAuthorities());
+
         return timeTableSolverService.getTimeTableRuns();
     }
 
-    // USER + ADMIN
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
     @GetMapping("/runs/{id}")
     public List<TimeTableEntryResponse> getRunById(
             @PathVariable Long id) {
@@ -72,7 +73,14 @@ public class TimeTableController {
         return timeTableSolverService.getTTRunById(id);
     }
 
-    // ADMIN ONLY
+    @PreAuthorize("hasAnyRole('ADMIN','TEACHER','STUDENT')")
+    @GetMapping("/stats")
+    public TimeTableStatsResponse getTimeTableStats() {
+        return timeTableSolverService.getTimeTableStats();
+    }
+
+    // ================= ADMIN ONLY =================
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/runs/{id}")
     public ResponseEntity<?> deleteTimeTableRunById(
@@ -81,12 +89,5 @@ public class TimeTableController {
         timeTableSolverService.deleteRun(id);
 
         return ResponseEntity.ok("Run Deleted");
-    }
-
-    // USER + ADMIN
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @GetMapping("/stats")
-    public TimeTableStatsResponse getTimeTableStats() {
-        return timeTableSolverService.getTimeTableStats();
     }
 }

@@ -13,6 +13,15 @@ import { getRuns, deleteRun } from "../api/timetableApi";
 function Runs() {
   const navigate = useNavigate();
 
+  const role = localStorage.getItem("role");
+
+  const prefix =
+    role === "ROLE_ADMIN"
+      ? "/admin"
+      : role === "ROLE_TEACHER"
+      ? "/teacher"
+      : "/student";
+
   const [runs, setRuns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -77,7 +86,9 @@ function Runs() {
             </h1>
 
             <p className="mt-2 text-slate-500">
-              View, manage and export generated timetable runs.
+              {role === "ROLE_ADMIN"
+                ? "View, manage and export generated timetable runs."
+                : "View the generated timetable runs."}
             </p>
 
           </div>
@@ -212,7 +223,7 @@ function Runs() {
 
                       <button
                         onClick={() =>
-                          navigate(`/timetable/${run.id}`)
+                          navigate(`${prefix}/timetable/${run.id}`)
                         }
                         className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 transition"
                       >
@@ -220,15 +231,15 @@ function Runs() {
                         View
                       </button>
 
-                      <button
-                        onClick={() =>
-                          handleDelete(run.id)
-                        }
-                        className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600 transition"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </button>
+                      {role === "ROLE_ADMIN" && (
+                        <button
+                          onClick={() => handleDelete(run.id)}
+                          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600 transition"
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      )}
 
                     </div>
 

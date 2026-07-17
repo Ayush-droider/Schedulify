@@ -9,11 +9,12 @@ import {
   CalendarCheck,
   PlayCircle,
   History,
+  Calendar,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
 
-const menus = [
+const adminMenus = [
   { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Teachers", path: "/admin/teachers", icon: Users },
   { name: "Subjects", path: "/admin/subjects", icon: BookOpen },
@@ -26,13 +27,30 @@ const menus = [
   { name: "Runs", path: "/admin/runs", icon: History },
 ];
 
+const teacherMenus = [
+  { name: "Dashboard", path: "/teacher/dashboard", icon: LayoutDashboard },
+  { name: "Subjects", path: "/teacher/subjects", icon: BookOpen },
+  { name: "Teachers", path: "/teacher/teachers", icon: Users },
+  { name: "Timetable Runs", path: "/teacher/runs", icon: History },
+];
+
+const studentMenus = [
+  { name: "Dashboard", path: "/student/dashboard", icon: LayoutDashboard },
+  { name: "Timetable Runs", path: "/student/runs", icon: History },
+];
+
 function Sidebar() {
+    const role = localStorage.getItem("role");
+    const menus =
+      role === "ROLE_ADMIN"
+        ? adminMenus
+        : role === "ROLE_TEACHER"
+        ? teacherMenus
+        : studentMenus;
   return (
     <aside className="w-72 min-h-screen bg-white border-r border-slate-200 shadow-sm flex flex-col">
 
-      {/* ===================== Logo Section ===================== */}
       <div className="px-6 py-8 border-b border-slate-200">
-
         <h1 className="text-3xl font-extrabold text-blue-600 tracking-tight">
           Schedulify
         </h1>
@@ -42,12 +60,14 @@ function Sidebar() {
         </p>
 
         <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-blue-500">
-          Optimized with Timefold
+          {role === "ROLE_ADMIN"
+            ? "Administrator"
+            : role === "ROLE_TEACHER"
+            ? "Teacher Portal"
+            : "Student Portal"}
         </p>
-
       </div>
 
-      {/* ===================== Navigation ===================== */}
       <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
 
         {menus.map((menu) => {
@@ -58,8 +78,7 @@ function Sidebar() {
               key={menu.path}
               to={menu.path}
               className={({ isActive }) =>
-                `group flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200
-                ${
+                `group flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-md"
                     : "text-slate-700 hover:bg-blue-50 hover:text-blue-600 hover:translate-x-1"
@@ -73,7 +92,6 @@ function Sidebar() {
         })}
 
       </nav>
-
     </aside>
   );
 }

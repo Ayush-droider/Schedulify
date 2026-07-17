@@ -1,28 +1,24 @@
 package com.schedulify.timetable_generator.Entity;
 
+import com.schedulify.timetable_generator.Security.Entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
-@Table(name="teachers")
+@Table(name = "teachers")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Builder    //---Method ke Arguments ko ulte seedhe krke bhi de skte hai
-            // .builder().name().age.email().build(); kisi bhi order me dedo
-            //clean object creation
-
+@Builder
 public class Teacher {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false) //nullable=false schema layer per kaam krega aur NotBlank application layer pe
+    @Column(nullable = false)
     @NotBlank
     private String name;
 
@@ -31,5 +27,4 @@ public class Teacher {
 
     @Column(nullable = false)
     private String department;
-
 }
